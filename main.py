@@ -1,28 +1,30 @@
+import qrcode
 from tkinter import *
-import speedtest
+from tkinter import Image,PhotoImage
+from PIL import Image,ImageTk
+#import image
+w =Tk()
+w.geometry('400x500')
+w.title('QRCode Generator')
+w.config(background= '#5A67A5')
 
-def speed():
-    sp = speedtest.Speedtest()
-    sp.get_servers()
-    up=str(round(sp.download()/(10**6),3))+'Mbps'
-    down= str(round(sp.download() / (10 ** 6), 3)) + 'Mbps'
-    b1.config(text=down)
-    b3.config(text=up)
-w=Tk()
-w.title('speed test')
-w.geometry('600x400')
-l=Label(w,text="Internet Speed Test",font=(30))
-l.pack()
-b=Button(w,text='Download Speed',borderwidth=0,font=(30))
-b.place(x=230,y=50)
-b1=Button(w,text='00',borderwidth=0,font=(30))
-b1.place(x=280,y=100)
-b2=Button(w,text='Upload Speed',borderwidth=0,font=(30))
-b2.place(x=230,y=150)
-b3=Button(w,text='00',borderwidth=0,font=(30))
-b3.place(x=280,y=200)
-b4=Button(w,text='Check Speed',font=(30),command=speed)
-b4.place(x=230,y=250)
+qr = qrcode.QRCode(
+    version=3, #higer the version,bigger picture n more complex it is
+    box_size= 12, #size of box where qr code is formed
+    border=3,#border of qrcode
+)
+entry=Entry(w,font=("times",20,'bold'))
+entry.pack()
 
-
+def qrc():
+    data = entry.get()
+    qr.add_data(data) #qr is made
+    qr.make(fit=True)
+    img=qr.make_image(fill= 'black',back_color='white')
+    img.save('img.png') #qr completion complete
+    img1 = ImageTk.PhotoImage(file='img.png') #qr is converted into python img
+    l=Label(w,width=400,height=400,image=img1)# img is assigned to a label
+    l.pack()
+b=Button(text='Generate QR',command=qrc)
+b.pack()
 w.mainloop()
